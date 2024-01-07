@@ -9,7 +9,7 @@ for _ in range(n):
         d[input] = 1
     else:
         d[input]+=1
-# 0: 나온 횟수, 1: 길이
+
 d = dict(sorted(d.items(), key= lambda x:(-x[1],-len(x[0]),x[0])))
 
 for i in d.keys():
