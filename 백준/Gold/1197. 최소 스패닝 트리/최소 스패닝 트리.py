@@ -1,6 +1,6 @@
 import sys, heapq
 input = sys.stdin.readline
-
+sys.setrecursionlimit(1000000)
 def find(x):
     global parent
     if parent[x] != x:
