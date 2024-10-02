@@ -1,19 +1,16 @@
 def solution(s):
     answer = True
+    l = []
     
-    num = 0
     for i in s:
         if i == "(":
-            num += 1
+            l.append(i)
         else:
-            num -= 1
-        if num < 0:
-            answer = False
-            break
+            if len(l) <= 0:
+                return False
+            l.pop()
     
-    if num == 0:
-        answer = True
+    if len(l) == 0:
+        return True
     else:
-        answer = False
-    
-    return answer
+        return False
