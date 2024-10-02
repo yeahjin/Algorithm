@@ -1,6 +1,7 @@
 def solution(s):
-    l = s.split(" ")
     answer = []
-    for i in l:
+    s = s.split(" ")
+    for i in s:
         answer.append(i.capitalize())
+    
     return " ".join(answer)
