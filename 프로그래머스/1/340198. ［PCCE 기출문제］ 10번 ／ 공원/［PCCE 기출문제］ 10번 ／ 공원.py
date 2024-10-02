@@ -1,14 +1,11 @@
-import collections
 def solution(mats, park):
     answer = -1
-    
     h = len(park)
     w = len(park[0])
-    for i in range(len(park)):
-        for j in range(len(park[0])):
+    for i in range(h):
+        for j in range(w):
             if park[i][j] != "-1":
                 continue
-            
             answer = max(mats_sol(mats,park, i, j),answer)
     
     
