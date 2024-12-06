@@ -1,7 +1,11 @@
--- 코드를 입력하세요
-SELECT a.author_id, a.author_name, b.category, sum(sales*price) as total_sales from book_sales as bs
-join book as b on b.book_id = bs.book_id
-join author as a on a.author_id = b.author_id
-where date_format(bs.sales_date, "%Y-%m") = "2022-01"
-group by a.author_id, b.category
-order by a.author_id asc, b.category desc;
+with a as(SELECT book_id, sum(sales) as total_sales from book_sales
+where date_format(sales_date, "%Y-%m") = "2022-01"
+group by book_id),
+
+b as (select author_id, category, sum(price*total_sales) as total_sales from book as b
+left join a on a.book_id = b.book_id
+group by category, author_id)
+
+select b.author_id, author_name,b.category, b.total_sales from b
+left join author as c on c.author_id = b.author_id
+order by author_id, category desc
