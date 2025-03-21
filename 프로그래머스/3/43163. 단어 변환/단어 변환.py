@@ -1,4 +1,4 @@
-import heapq
+from collections import deque
 def compare(x,y):
     cnt = 0
     for i in range(len(x)):
@@ -10,24 +10,17 @@ def compare(x,y):
         return False
 
 def bfs(begin,words,target):
-    q = []
-    d = [1e9] * len(words)
-    for i in range(len(words)):
-        if compare(begin,words[i]):
-            heapq.heappush(q,(1,words[i]))
-            d[i] = 1
+    q = deque()
+    
+    q.append((begin,0))
+    
     while q:
-        cnt, word = heapq.heappop(q)
+        word, cnt = q.popleft()
         if word == target:
             return cnt
-        for i in range(len(words)):
-            if d[i] <= cnt:
-                continue
-            if compare(words[i],word):
-                heapq.heappush(q,(cnt+1, words[i]))
-                d[i] = cnt + 1
-    return 0
-                
+        for i in words:
+            if compare(i, word):
+                q.append((i, cnt + 1))
     
 
 def solution(begin, target, words):
