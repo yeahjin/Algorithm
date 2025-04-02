@@ -1,37 +1,31 @@
 from collections import deque
 
-def valid(a,b):
-    tmp = 0
+def word_cnt(a,b):
+    cnt = 0
     for i in range(len(a)):
         if a[i] != b[i]:
-            tmp += 1
-    if tmp == 1:
+            cnt += 1
+    if cnt == 1:
         return True
     else:
         return False
 
-
-def bfs(begin, target, words):
+def bfs(a, words, target):
     q = deque()
-    for i in words:
-        if valid(begin, i):
-            q.append((i, 1))
+    q.append((a,0))
+    
     while q:
         word, cnt = q.popleft()
         if word == target:
             return cnt
         for i in words:
-            if valid(word,i):
+            if word_cnt(i,word):
                 q.append((i, cnt + 1))
     
-
-
+    
 def solution(begin, target, words):
     answer = 0
-    
     if target not in words:
         return 0
-    
-    answer = bfs(begin, target, words)
-    
+    answer = bfs(begin,words, target)
     return answer
