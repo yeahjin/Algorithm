@@ -1,15 +1,10 @@
 import heapq
 import sys
 input = sys.stdin.readline
+# 다익스트라를 위한 코드 (인접리스트)
 INF = int(1e9)
-n, m, x = map(int,input().split())
-g = [[] for _ in range(n+1)]
-dis = [[INF] * (n+1) for _ in range(n+1)]
-for i in range(m):
-    a, b, c = map(int,input().split())
-    g[a].append((b,c))
 
-def dij(start):
+def dij(start,g):
     d = [INF] * (n + 1)
     q = []
     heapq.heappush(q,(0, start))
@@ -25,12 +20,19 @@ def dij(start):
                 heapq.heappush(q,(cost, i[0]))
     return d
 
-for i in range(1,n+1):
-    tmp = dij(i)
-    for j in range(1,n+1):
-        dis[i][j] = tmp[j]
+
+n, m, x = map(int,input().split())
+g = [[] for _ in range(n+1)]
+g_r = [[] for _ in range(n+1)]
+for i in range(m):
+    a, b, c = map(int,input().split())
+    g[a].append((b,c))
+    g_r[b].append((a,c))
+
+ntox = dij(x,g)
+xton = dij(x,g_r)
 ans = -1
 for i in range(1,n+1):
-    total = dis[i][x] + dis[x][i]
-    ans = max(total, ans)
+    if i != x:
+        ans = max(ans,ntox[i] + xton[i])
 print(ans)
