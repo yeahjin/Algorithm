@@ -1,76 +1,83 @@
+import java.io.*;
 import java.util.*;
 
 public class Main {
-	static int[][] map;
-	static int[][] date;
-	static int m; // 가로
-	static int n; // 세로
-	static int cnt;
-	static int[] dx = {0,0,1,-1};
-	static int[] dy = {1,-1,0,0};
-	static Queue<Node> Q = new LinkedList<Node>();
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		m = sc.nextInt();
-		n = sc.nextInt();
-		map = new int[n][m];
-		date = new int[n][m];
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < m; j++) {
-				map[i][j] = sc.nextInt();
-				if(map[i][j] == 1) {
-					Q.offer(new Node(i, j));
-				}
+    static final int[] dx = {0,0,1,-1};
+    static final int[] dy = {1,-1,0,0};
+    static int n, m, cntForCompare;
 
-			}
-		}
-		bfs();
-		int result = 0;
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < m; j++) {
-				if(map[i][j] == 0) {
-					System.out.println(-1);
-					return;
-				}
-				else {
-					result = Math.max(result, date[i][j]);
-				}
-			}
-		}
-		System.out.println(result);
-	}
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-	private static void bfs() {
-		while(!Q.isEmpty()) {
-			Node toma = Q.poll();
-			for (int i = 0; i < 4; i++) {
-				int nx = toma.x + dx[i];
-				int ny = toma.y + dy[i];
-				if(nx >= 0 && nx < n && ny >= 0 && ny < m&&map[nx][ny] == 0) {
-					map[nx][ny] = 1;
-					Q.offer(new Node(nx,ny));
-					date[nx][ny] = date[toma.x][toma.y] + 1;
-				}
-			}
-		}
-	}
+        m = Integer.parseInt(st.nextToken());
+        n = Integer.parseInt(st.nextToken());
 
-	private static void print(int[][] map) {
-		for (int i = 0; i < map.length; i++) {
-			for (int j = 0; j < map[i].length; j++) {
-				System.out.print(map[i][j]);
-			}
-			System.out.println();
-		}
-		System.out.println();
-	}
-	
-	static class Node{
-		int x;
-		int y;
-		Node(int x, int y) {
-			this.x = x;
-			this.y = y;
-		}
-	}
+        int[][] grid = new int[n][m];
+        int[][] dist = new int[n][m];
+        boolean[][] visited = new boolean[n][m];
+        Queue<int[]> q = new ArrayDeque<>();
+
+        for (int i = 0; i < n; i++){
+            st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < m; j++){
+                int num = Integer.parseInt(st.nextToken());
+                grid[i][j] = num;
+                dist[i][j] = 1000000;
+
+                if (num == 1){
+                    q.offer(new int[]{i,j});
+                    visited[i][j] = true;
+                    dist[i][j] = 0;
+                } else if (num == -1) {
+                    cntForCompare++;
+                }
+            }
+        }
+
+        while(!q.isEmpty()){
+            int[] cur = q.poll();
+            int x = cur[0];
+            int y = cur[1];
+
+            for (int i = 0 ; i < 4; i++){
+                int nx = dx[i] + x;
+                int ny = dy[i] + y;
+
+                if (nx < 0 || ny < 0 || nx >= n || ny >= m) continue;
+                if (visited[nx][ny]) continue;
+                if (grid[nx][ny] == -1 || grid[nx][ny] == 1) continue;
+
+                q.offer(new int[] {nx, ny});
+                dist[nx][ny] = dist[x][y] + 1;
+                visited[nx][ny] = true;
+            }
+        }
+
+        int ans = 0;
+        for (int i = 0; i < n; i++){
+            for (int j = 0; j < m; j++){
+                if (dist[i][j] == 1000000) continue;
+                ans = Math.max(ans, dist[i][j]);
+            }
+        }
+
+        if (!compare(dist)){
+            System.out.println(-1);
+            return;
+        }
+        System.out.println(ans);
+    }
+
+    public static boolean compare(int[][] grid){
+        int cnt = 0;
+        for (int i = 0; i < n; i++){
+            for (int j = 0; j < m; j++){
+                if (grid[i][j] == 1000000) {
+                    cnt++;
+                }
+            }
+        }
+        return cnt == cntForCompare;
+    }
 }
