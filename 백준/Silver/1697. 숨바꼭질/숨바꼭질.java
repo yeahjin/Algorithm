@@ -1,39 +1,30 @@
 import java.util.*;
-
 public class Main {
-	static int n;
-	static int k;
-	static int[] visited = new int[100001];
+    static final int MAX = 100000;
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int k = sc.nextInt();
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		n = sc.nextInt();
-		k = sc.nextInt();
-		int result = bfs(n);
-		System.out.println(result);
+        Queue<Integer> q = new ArrayDeque<>();
+        boolean[] visited = new boolean[MAX+1];
+        int[] dist = new int[MAX+1];
 
-	}
+        q.offer(n);
+        visited[n] = true;
 
-	private static int bfs(int node) {
-		Queue<Integer> q = new LinkedList<Integer>();
-		q.add(node);
-		visited[node] = 1;
-		while (!q.isEmpty()) {
-			int n = q.poll();
-			if (n == k) {
-				return visited[n] - 1;
-			} if (n - 1 >= 0 && visited[n - 1] == 0) {
-				visited[n - 1] = visited[n] + 1;
-				q.add(n - 1);
-			} if (n + 1 <= 100000 && visited[n + 1] == 0) {
-				visited[n + 1] = visited[n] + 1;
-				q.add(n + 1);
-			} if (n * 2 <= 100000 && visited[n * 2] == 0) {
-				visited[n * 2] = visited[n] + 1;
-				q.add(n * 2);
-			}
-		}
-		return -1;
-	}
+        while(!q.isEmpty()){
+            int cur = q.poll();
+            if (cur == k) break;
 
+            for (int i : new int[]{cur+1, cur -1, cur *2}){
+                if (i < 0 || i>MAX) continue;
+                if (visited[i]) continue;
+                visited[i] = true;
+                dist[i] = dist[cur] + 1;
+                q.offer(i);
+            }
+        }
+        System.out.println(dist[k]);
+    }
 }
