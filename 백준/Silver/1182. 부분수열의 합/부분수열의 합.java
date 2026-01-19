@@ -1,10 +1,8 @@
 import java.util.*;
 public class Main {
     static int N, S;
-    static int[] picked;
     static int[] list;
     static int ans;
-    static int end;
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         N = sc.nextInt();
@@ -12,32 +10,23 @@ public class Main {
 
         list = new int[N];
         for (int i = 0; i < N; i++){
-            int tmp = sc.nextInt();
-            list[i] = tmp;
+            list[i] = sc.nextInt();
         }
-        for (int i = 1 ; i <= N; i++){
-            picked = new int[i];
-            end = i;
-            dfs(0,0);
-        }
+
+        dfs(0,0);
+
+        if (S == 0) ans--;
 
         System.out.println(ans);
     }
 
-    public static void dfs(int dep, int idx){
-        if (dep == end){
-            int tmp = 0;
-            for (int i : picked){
-                tmp += i;
-            }
-            if (S == tmp) ans++;
+    public static void dfs(int dep, int num){
+        if (dep == N){
+            if (num == S) ans++;
             return;
         }
-        for (int i = idx; i < N; i++){
-            picked[dep] = list[i];
-            dfs(dep + 1, i + 1);
-        }
-
+        dfs(dep+1, num + list[dep]); // 선택함
+        dfs(dep+1, num); // 선택 안함
     }
 
 }
